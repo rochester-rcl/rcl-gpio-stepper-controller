@@ -1,29 +1,34 @@
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 from threading import Thread
 from enum import Enum
 import time
-from stepper_controller.default_stepper.defaults import DefaultStepperPins
+from default_stepper.defaults import default_allegro
 
 
 class AllegroControls:
+    MICROSTEP_FULL = 0
+    MICROSTEP_HALF = 1
+    MICROSTEP_QUARTER = 2
+    MICROSTEP_EIGHTH = 3
+    MICROSTEP_SIXTEENTH = 4
     """
     A class to control an Allegro stepper driver carrier like the `Pololu A4988 <https://www.pololu.com/product/1182>`_
     """
 
     def __init__(self, **kwargs):
         """
-        :param kwargs: 
+        :param kwargs:
         :Keyword Arguments:
             stepper (``dict``) --
-                Optionally pass in a dict to override the default GPIO pins found in `DefaultStepperPins.default_allegro 
+                Optionally pass in a dict to override the default GPIO pins found in `DefaultStepperPins.default_allegro
                 <stepper_controller.default_stepper.html#module-stepper_controller.default_stepper.defaults>`_
                 You can replace any / all of the following keys:
-                dir | step | enable | vdd | microstep - ms1 | ms2 | ms3 
+                dir | step | enable | vdd | microstep - ms1 | ms2 | ms3
         """
         if 'stepper' in kwargs:
-            self.stepper = {**kwargs['stepper'], **DefaultStepperPins.default_allegro}
+            self.stepper = {**kwargs['stepper'], **default_allegro()}
         else:
-            self.stepper = DefaultStepperPins.default_allegro
+            self.stepper = default_allegro()
 
         self.mode = GPIO.setmode(GPIO.BCM)
         self.motor_stopped = False
@@ -42,6 +47,7 @@ class AllegroControls:
 
         # stop motors w/ enable pins
         GPIO.output(self.stepper['enable'], GPIO.HIGH)
+        self._thread = Thread(target=self._forward, args=())
 
     def _set_microstep_resolution(self, pins, pin_modes):
 
@@ -52,44 +58,57 @@ class AllegroControls:
 
     def microstep(self, resolution):
         """
-        :param resolution (``str``): The resolution of each step - options are FULL, HALF, QUARTER, EIGHTH, and SIXTEENTH 
+        :param resolution (``int``): The resolution of each step - options are 
+        AllegoControls.MICROSTEP_FULL (0 - default)
+        
+        AllegroControls.MICROSTEP_HALF (1)
+        
+        AllegroControls.MICROSTEP_QUARTER (2)
+        
+        AllegroControls.MICROSTEP_EIGHTH (3)
+        
+        AllegroControls.MICROSTEP_SIXTEENTH (4)
+        
         """
         # available resolutions - FULL, HALF, QUARTER, EIGHTH, SIXTEENTH
 
-        if resolution is 'full':  # LOW LOW LOW
+        if resolution is self.MICROSTEP_FULL:  # LOW LOW LOW
             pin_mode = [GPIO.LOW, GPIO.LOW, GPIO.LOW]
             self._set_microstep_resolution(self.right_stepper['microstep'].items(), pin_mode)
             self._set_microstep_resolution(self.left_stepper['microstep'].items(), pin_mode)
-        if resolution is 'half':  # HIGH LOW LOW
+        if resolution is self.MICROSTEP_HALF:  # HIGH LOW LOW
             pin_mode = (GPIO.HIGH, GPIO.LOW, GPIO.LOW)
             self._set_microstep_resolution(self.right_stepper['microstep'].items(), pin_mode)
             self._set_microstep_resolution(self.left_stepper['microstep'].items(), pin_mode)
-        if resolution is 'quarter':  # LOW HIGH LOW
+        if resolution is self.MICROSTEP_QUARTER:  # LOW HIGH LOW
             pin_mode = (GPIO.LOW, GPIO.HIGH, GPIO.LOW)
             self._set_microstep_resolution(self.right_stepper['microstep'].items(), pin_mode)
             self._set_microstep_resolution(self.left_stepper['microstep'].items(), pin_mode)
-        if resolution is 'eighth':  # HIGH HIGH LOW
+        if resolution is self.MICROSTEP_EIGHTH:  # HIGH HIGH LOW
             pin_mode = (GPIO.HIGH, GPIO.HIGH, GPIO.LOW)
             self.set_microstep_resolution(self.right_stepper['microstep'].items(), pin_mode)
             self.set_microstep_resolution(self.left_stepper['microstep'].items(), pin_mode)
-        if resolution is 'sixteenth':
+        if resolution is self.MICROSTEP_SIXTEENTH:
             pin_mode = (GPIO.HIGH, GPIO.HIGH, GPIO.HIGH)
             self._set_microstep_resolution(self.right_stepper['microstep'].items(), pin_mode)
             self._set_microstep_resolution(self.left_stepper['microstep'].items(), pin_mode)
 
-    def motor_setup(self):
+    def motor_setup(self, dir):
         """
-        Sets up the motor (sets the direction and enable pins to LOW)
+        :param dir (``bool``): The direction the motor turns 
+        True = clockwise 
+        False = counter-clockwise 
         """
+        state = GPIO.LOW if dir is False else GPIO.HIGH
         # move right stepper counter clockwise
-        GPIO.output(self.stepper['dir'], GPIO.LOW)
-        GPIO.output(self.stepper['enable'], GPIO.LOW)
+        GPIO.output(self.stepper['dir'], state)
+        GPIO.output(self.stepper['enable'], state)
 
     def motor_forward(self):
         """
-        Moves the motor forward in a separate thread  
+        Moves the motor forward in a separate thread
         """
-        Thread(target=self._forward, args=()).start()
+        self._thread.start()
 
     def _forward(self):
         GPIO.output(self.stepper['step'], GPIO.HIGH)
@@ -116,9 +135,16 @@ class AllegroControls:
             else:
                 GPIO.output(pin, GPIO.LOW)
 
+    def disable(self):
+        """
+        Disables the motor by setting the controller's enable pin to HIGH 
+        """
+        GPIO.output(controls.stepper['enable'], GPIO.HIGH)
+        self.motor_stopped = True
+
     def close(self):
         """
-        Shuts down the motor and cleans up GPIO pins 
+        Shuts down the motor and cleans up GPIO pins
         """
         self._motor_shutdown()
         GPIO.cleanup()
@@ -126,13 +152,10 @@ class AllegroControls:
 
 if __name__ == '__main__':
     controls = AllegroControls()
-    controls.microstep('sixteenth')
+    controls.microstep(AllegroControls.MICROSTEP_FULL)
     controls.motor_setup()
-    while True:
-        for step in range(0, 100):
-            time.sleep(0.004)
-            controls.motor_forward()
-
-    GPIO.output(controls.stepper['enable'], GPIO.HIGH)
-    controls.motor_stopped = True
+    for step in range(0, 100):
+        time.sleep(0.004)
+        controls.motor_forward()
+    controls.disable()
     controls.close()
