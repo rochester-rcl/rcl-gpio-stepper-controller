@@ -25,8 +25,8 @@ class DefaultAllegroPins(Enum):
 def default_allegro():
     """
     Returns a dict that stores all of the default values for an Allegro stepper driver carrier 
-    :returns: dict 
-    
+    :return:
+        dict
     """
     return {'dir': DefaultAllegroPins.RIGHT_DIR, 'step': DefaultAllegroPins.RIGHT_STEP,
             'enable': DefaultAllegroPins.RIGHT_ENABLE,

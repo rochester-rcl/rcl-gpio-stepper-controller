@@ -14,3 +14,15 @@ Subpackages
     stepper_controller.allegro_controller
     stepper_controller.default_stepper
 
+Submodules
+----------
+
+stepper_controller.setup module
+-------------------------------
+
+.. automodule:: stepper_controller.setup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
