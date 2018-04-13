@@ -17,9 +17,8 @@ Install the module
 git clone https://github.com/rochester-rcl/rcl-gpio-stepper-controller.git
 cd rcl-gpio-stepper-controller/stepper_controller
 python3 setup.py sdist && pip3 install -e .
-
-This will install 2 modules: allegro_controller and default_stepper. The documentation can be found [here](https://rochester-rcl.github.io/rcl-gpio-stepper-controller/build/html/stepper_controller.html)
 ```
+This will install 2 modules: allegro_controller and default_stepper. The documentation can be found [here](https://rochester-rcl.github.io/rcl-gpio-stepper-controller/build/html/stepper_controller.html)
 
 Basic usage
 ```python
