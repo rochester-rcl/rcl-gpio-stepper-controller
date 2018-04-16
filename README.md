@@ -31,7 +31,7 @@ controls.motor_setup()
 # take 100 steps at 1/16 microstep resolution and shut down
 for step in range(0, 100):
     time.sleep(0.004)
-    controls.motor_forward()
+    controls.step()
 controls.disable()
 controls.close()
 ```
