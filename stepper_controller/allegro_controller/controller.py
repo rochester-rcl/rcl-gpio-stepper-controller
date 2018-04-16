@@ -32,7 +32,7 @@ class AllegroControls:
                 The desired speed of the motor in revolutions per minute. Default is 60.
         """
         if 'stepper' in kwargs:
-            self.stepper = {**kwargs['stepper'], **default_allegro()}
+            self.stepper = self.merge_stepper_configs(default_allegro(), kwargs['stepper'])
         else:
             self.stepper = default_allegro()
 
@@ -67,7 +67,6 @@ class AllegroControls:
         self._thread = Thread(target=self._move, args=())
 
     def _set_microstep_resolution(self, pins, pin_modes):
-
         set_microstep = lambda pin, pin_mode: GPIO.output(pin, pin_mode)
         for pin, mode in zip(pins, pin_modes):
             print(pin, mode)
@@ -203,6 +202,12 @@ class AllegroControls:
         """
         self._motor_shutdown()
         GPIO.cleanup()
+
+    @staticmethod
+    def merge_stepper_configs(config_1, config_2):
+        cloned = config_1.copy()
+        cloned.update(config_2)
+        return cloned
 
 
 if __name__ == '__main__':

@@ -22,16 +22,15 @@ This will install 2 modules: allegro_controller and default_stepper. The documen
 
 Basic usage
 ```python
-from allegro_controller.controls import AllegroControls
+from allegro_controller.controller import AllegroControls
 import time
 
 controls = AllegroControls()
-controls.microstep(AllegroControls.MICROSTEP_SIXTEENTH)
-controls.motor_setup()
-# take 100 steps at 1/16 microstep resolution and shut down
+controls.microstep(AllegroControls.MICROSTEP_FULL)
+controls.motor_setup(True)
 for step in range(0, 100):
-    time.sleep(0.004)
-    controls.step()
+   time.sleep(0.004)
+   controls.step()
 controls.disable()
 controls.close()
 ```
