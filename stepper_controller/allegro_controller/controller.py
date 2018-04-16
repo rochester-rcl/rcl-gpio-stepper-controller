@@ -1,4 +1,4 @@
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from threading import Thread, Lock
 from enum import Enum
 import time
