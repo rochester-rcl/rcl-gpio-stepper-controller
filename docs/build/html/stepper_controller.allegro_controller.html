@@ -61,11 +61,27 @@
 You can replace any / all of the following keys:
 dir | step | enable | vdd | microstep - ms1 | ms2 | ms3</p>
 </dd>
+<dt>step_angle (<code class="docutils literal"><span class="pre">float</span></code>) &#8211; </dt>
+<dd><p class="first last">The step angle of the motor. Default is 1.8 degrees</p>
+</dd>
+<dt>rpm (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; </dt>
+<dd><p class="first last">The desired speed of the motor in revolutions per minute. Default is 60.</p>
+</dd>
 </dl>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.DEFAULT_RPM">
+<code class="descname">DEFAULT_RPM</code><em class="property"> = 180</em><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.DEFAULT_RPM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.DEFAULT_STEP_ANGLE">
+<code class="descname">DEFAULT_STEP_ANGLE</code><em class="property"> = 1.8</em><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.DEFAULT_STEP_ANGLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="stepper_controller.allegro_controller.controller.AllegroControls.MICROSTEP_EIGHTH">
 <code class="descname">MICROSTEP_EIGHTH</code><em class="property"> = 3</em><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.MICROSTEP_EIGHTH" title="Permalink to this definition">¶</a></dt>
@@ -122,12 +138,6 @@ dir | step | enable | vdd | microstep - ms1 | ms2 | ms3</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="stepper_controller.allegro_controller.controller.AllegroControls.motor_forward">
-<code class="descname">motor_forward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.motor_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves the motor forward in a separate thread</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="stepper_controller.allegro_controller.controller.AllegroControls.motor_setup">
 <code class="descname">motor_setup</code><span class="sig-paren">(</span><em>dir</em><span class="sig-paren">)</span><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.motor_setup" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -143,9 +153,46 @@ False = counter-clockwise</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.move">
+<code class="descname">move</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continuously moves the motor in the current direction (executes in a separate thread)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="stepper_controller.allegro_controller.controller.AllegroControls.pause">
 <code class="descname">pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.pause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pauses the motor&#8217;s movement</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.rpm">
+<code class="descname">rpm</code><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.rpm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The speed of the motor in revolutions per minute</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.rps">
+<code class="descname">rps</code><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.rps" title="Permalink to this definition">¶</a></dt>
+<dd><p>The speed of the motor in revolutions per second</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.set_speed">
+<code class="descname">set_speed</code><span class="sig-paren">(</span><em>rpm</em><span class="sig-paren">)</span><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.set_speed" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>(int)</strong> (<a class="reference internal" href="#stepper_controller.allegro_controller.controller.AllegroControls.rpm" title="stepper_controller.allegro_controller.controller.AllegroControls.rpm"><em>rpm</em></a>) &#8211; The speed of the motor in revolutions per minute</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stepper_controller.allegro_controller.controller.AllegroControls.step">
+<code class="descname">step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stepper_controller.allegro_controller.controller.AllegroControls.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the motor one step in the current direction</p>
 </dd></dl>
 
 </dd></dl>
