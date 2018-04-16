@@ -11,7 +11,7 @@ class AllegroControls:
     MICROSTEP_EIGHTH = 3
     MICROSTEP_SIXTEENTH = 4
     DEFAULT_STEP_ANGLE = 1.8
-    DEFAULT_RPM = 180
+    DEFAULT_RPM = 60
     _lock = Lock()
     """
     A class to control an Allegro stepper driver carrier like the `Pololu A4988 <https://www.pololu.com/product/1182>`_
