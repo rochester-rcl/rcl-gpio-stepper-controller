@@ -46,7 +46,7 @@ class AllegroControls:
         else:
             self._rpm = self.DEFAULT_RPM
 
-        self.steps_per_rev = int(360  / self.step_angle)
+        self.steps_per_rev = int(360 / self.step_angle)
         self.mode = GPIO.setmode(GPIO.BCM)
         self.motor_stopped = False
         self.paused = False
@@ -132,7 +132,7 @@ class AllegroControls:
         state = GPIO.LOW if dir is False else GPIO.HIGH
         # move right stepper counter clockwise
         GPIO.output(self.stepper['dir'], state)
-        GPIO.output(self.stepper['enable'], state)
+        GPIO.output(self.stepper['enable'], GPIO.HIGH)
 
     def set_speed(self, rpm):
         """
